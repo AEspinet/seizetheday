@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+
+<html>
+
+	<head>
+
+		<title>Seize the Day</title>
+
+		<script>
+		</script>
+
+		<link id="style" rel="stylesheet" type="text/css" href=""/>
+
+
+		
+	</head>
+
+	<body>
+
+		<div class="wrapsky">
+
+			<div class="content">
+
+				<div>
+
+					<h1 id="title">Seize the Day</h1>
+
+					<img id="skything" src="daysun.png">
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="wrapland">
+
+			<div class="content">
+
+				<div class="colthin">
+
+					<h2 class="date" id="date"></h2>
+
+					<h2 class="temp" id="temp"></h2>
+
+				</div>
+
+				<div class="colthin">
+
+					<h2 class="cond" id="cond"></h2>
+
+				</div>
+
+				<div class="colthin">
+
+					<h2 class="time" id="time"></h2> 
+
+					<h2 class="wind" id="wind"></h2>
+
+				</div>
+
+			</div>
+
+			<div class="content">
+
+				<div class="colthin">
+
+					<h3></h3>
+
+					<div class="forcast">
+
+					</div>
+
+				</div>
+
+
+				<div class="colthin">
+
+					<h3></h3>
+
+					<div class="forcast">
+
+					</div>
+					
+				</div>
+
+
+				<div class="colthin">
+
+					<h3></h3>
+
+					<div class="forcast">
+
+					</div>
+					
+				</div>
+
+			</div>
+
+		</div>
+
+	</body>
+
+	<script>
+
+
+		function currentDate() {
+
+  			var date = new Date();
+
+
+			 var m = new Array();
+			m[0]="January";
+			m[1]="February";
+			m[2]="March";
+			m[3]="April";
+			m[4]="May";
+			m[5]="June";
+			m[6]="July";
+			m[7]="August";
+			m[8]="September";
+			m[9]="October";
+			m[10]="November";
+			m[11]="December";
+
+			var month = m[date.getMonth()];
+
+			var day = date.getDate();
+
+			var year = date.getYear() + 1900;
+
+			var theDate = month + ' ' + day + ', ' + year;
+
+			document.getElementById('date').innerHTML=theDate;
+
+		}
+
+		currentDate();
+
+		function currentTime() {
+
+			var date = new Date();
+
+			var hour = date.getHours();
+			var min = date.getMinutes();
+
+            var ampm = hour >= 12 ? 'PM' : 'AM';
+
+            hour = hour % 12;
+            hour = hour ? hour : 12;
+
+            min = min < 10 ? '0'+min : min;
+
+  			var theTime = hour + ':' + min + ' ' + ampm;
+
+            document.getElementById('time').innerHTML=theTime;
+		}
+
+		currentTime();
+		setInterval('currentTime()', 10000);
+
+		
+function cssChange() { 
+
+			function getTime() {
+
+			  var time = new Date().getHours();
+
+			  return time;
+
+			}
+
+			function changeStyle(sheet) {
+				document.getElementById('style').setAttribute('href', sheet);
+			}
+
+			function changeSkything(thing) {
+				document.getElementById('skything').setAttribute('src', thing);
+			}
+
+			var x = getTime();
+
+			if (x > 5 && x <= 9) {
+			  changeStyle('dawn.css');
+			  changeSkything('dawnsun.png');
+			} else if (x > 9 && x <= 15) {
+			  changeStyle('day.css');
+			  changeSkything('daysun.png');
+			} else if (x > 15 && x <= 20) {
+			  changeStyle('dusk.css');
+			  changeSkything('dusksun.png');
+			} else if (x > 20 || x <= 5) {
+			  changeStyle('night.css');
+			  changeSkything('nightmoon.png');
+			}
+			console.log(x);
+		}
+
+		cssChange();
+		setInterval("cssChange()", 10000);
+
+	</script>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+	<script>
+	jQuery(document).ready(function theSky($) {
+		$.ajax({
+			url : "http://api.wunderground.com/api/8a7b5879a5caaee5/geolookup/conditions/q/IA/Toronto.json",
+			dataType : "jsonp",
+			success : function(parsed_json) {
+			var location = parsed_json['location']['city'];
+			var temp_c = parsed_json['current_observation']['temp_c'];
+			var cond = parsed_json['current_observation']['weather'];
+			var wind = parsed_json['current_observation']['wind_kph'];
+
+			temp_c = Math.round(temp_c);
+			wind = Math.round(wind);
+
+
+			function windCondition(temp_c) {
+			
+
+				var wc = new Array();
+
+				wc[0]="Calm"
+				wc[1]="Light Wind";
+				wc[2]="Gentle Breeze";
+				wc[3]="Moderate Breeze"
+				wc[4]="Strong Wind";
+				wc[5]="Gale";
+				wc[6]="Whole Gale";
+				wc[7]="Hurricane";
+
+			}
+
+		document.getElementById('temp').innerHTML=temp_c + '&deg;c';
+		document.getElementById('cond').innerHTML=cond;
+		document.getElementById('wind').innerHTML=wind + ' km/h';
+	  }
+	  });
+	});
+	setInterval("theSky();", 180000);
+
+	</script>
+
+
+
+</html>
